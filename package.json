@@ -1,0 +1,27 @@
+{
+  "name": "gator",
+  "version": "1.0.0",
+  "description": "A RSS feed aggregator as a project for Boot.dev",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickRC6/gator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NickRC6/gator/issues"
+  },
+  "homepage": "https://github.com/NickRC6/gator#readme",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
