@@ -1,9 +1,32 @@
-import { setUser, readConfig } from "./config.js";
+
+import { CommandsRegistry, registerCommand,runCommand } from "./commands/commands.js";
+import { handlerLogin } from "./commands/users.js";
 
 async function main() {
-  setUser("Nick");
-  const config = readConfig();
-  console.log(config);
-}
+  const args = process.argv.slice(2);
+
+    if (args.length < 1) {
+      console.log("usage: cli <command> [args...]");
+      process.exit(1);
+    }
+
+    const cmdName = args[0];
+    const cmdArgs = args.slice(1);
+    const commandsRegistry: CommandsRegistry = {};
+
+    registerCommand(commandsRegistry, "login", handlerLogin);
+
+    try {
+      await runCommand(commandsRegistry, cmdName, ...cmdArgs);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(`Error running command ${cmdName}: ${err.message}`);
+        } else {
+          console.error(`Error running command ${cmdName}: ${err}`);
+        }
+        process.exit(1);
+      }
+      process.exit(0);
+    }
 
 main();
