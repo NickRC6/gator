@@ -1,4 +1,4 @@
-import { createUser, getUserByName } from 'src/lib/db/queries/users.js';
+import { createUser, getUserByName, resetUsers } from 'src/lib/db/queries/users.js';
 import { setUser } from '../config.js'
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
@@ -25,4 +25,19 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
     setUser(args[0])
     console.log(result)
     console.log("User has been created.")
+}
+
+export async function reset(cmdName: string) {
+    try {
+        await resetUsers();
+        console.log("User table reset successful.")
+    }
+    catch (err) {
+    if (err instanceof Error) {
+      console.error(`Reset failed: ${err.message}`);
+    } else {
+      console.error("Reset failed.");
+    }
+    process.exit(1);
+  }
 }
