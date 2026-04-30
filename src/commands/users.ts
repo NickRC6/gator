@@ -1,9 +1,28 @@
+import { createUser, getUserByName } from 'src/lib/db/queries/users.js';
 import { setUser } from '../config.js'
 
-export function handlerLogin(cmdName: string, ...args: string[]) {
+export async function handlerLogin(cmdName: string, ...args: string[]) {
     if (args.length !== 1) {
         throw new Error("Username expected as argument.");
     }
+    const existing = await getUserByName(args[0]);
+    if (!existing) {
+        throw new Error("This user does not exist!");
+    }
     setUser(args[0])
     console.log("User has been set.")
+}
+
+export async function handlerRegister(cmdName: string, ...args: string[]) {
+    if (args.length !== 1) {
+        throw new Error("Username expected as argument.");
+    }
+    const existing = await getUserByName(args[0]);
+    if (existing) {
+        throw new Error("This user already exists!");
+    }
+    const result = await createUser(args[0])
+    setUser(args[0])
+    console.log(result)
+    console.log("User has been created.")
 }
