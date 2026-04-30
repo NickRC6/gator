@@ -1,4 +1,4 @@
-import { createUser, getUserByName, resetUsers } from 'src/lib/db/queries/users.js';
+import { createUser, getUserByName, resetUsers, getTableUsers } from 'src/lib/db/queries/users.js';
 import { setUser } from '../config.js'
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
@@ -40,4 +40,9 @@ export async function reset(cmdName: string) {
     }
     process.exit(1);
   }
+}
+
+export async function getUsers(cmdName: string) {
+    const result = await getTableUsers();
+    console.log(result);
 }
