@@ -1,5 +1,4 @@
 import { XMLParser } from "fast-xml-parser";
-import { parse } from "node:path";
 
 function requireString(obj: any, field: string, context: string): string {
     if (typeof obj[field] !== "string") {
@@ -19,12 +18,37 @@ export async function fetchFeed(feedURL: string) {
     const parser = new XMLParser({processEntities: false,});
     const parsedResult = parser.parse(resToText);
 
-    const channel = parsedResult.channel;
+    const channel = parsedResult?.rss?.channel;
     if (!channel) throw new Error("Invalid feed, channel field does not exist.");
 
     const title = requireString(channel, "title", "feed");
     const link = requireString(channel, "link", "feed");
     const description = requireString(channel, "description", "feed");
 
-    console.log(resToText);
+    let items = [];
+    let validatedAndExtractedItems = [];
+    if (channel.item) {
+        if (Array.isArray(channel.item)) {
+            items = channel.item;  
+        }
+        else {
+            items = [channel.item];
+        }
+    }
+    for (const item of items) {
+        const { title, link, description, pubDate } = item;
+        if (!title || !link || !description || !pubDate) continue;
+        validatedAndExtractedItems.push({ title, link, description, pubDate });
+    }
+
+    const rssObject = {
+        channel: {
+            title,
+            link,
+            description,
+            item: validatedAndExtractedItems,
+        }
+    };
+
+    return rssObject;
 }

@@ -27,7 +27,7 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
     console.log("User has been created.")
 }
 
-export async function reset(cmdName: string) {
+export async function handlerReset(cmdName: string) {
     try {
         await resetUsers();
         console.log("User table reset successful.")
@@ -42,7 +42,7 @@ export async function reset(cmdName: string) {
   }
 }
 
-export async function getUsers(cmdName: string) {
+export async function handlerGetUsers(cmdName: string) {
     const result = await getTableUsers();
     console.log(result);
 }
