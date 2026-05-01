@@ -15,6 +15,13 @@
       "when": 1777644164984,
       "tag": "0001_same_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777649955966,
+      "tag": "0002_vengeful_starfox",
+      "breakpoints": true
     }
   ]
 }
