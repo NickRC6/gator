@@ -1,10 +1,8 @@
-import { readConfig } from "../config.js";
-import { createFeed, getFeeds } from "../lib/db/queries/feeds";
+import { createFeed, getFeeds } from "../lib/db/queries/feeds.js";
 import { createFeedFollow } from "../lib/db/queries/feed-follows.js";
-import { getUserByName } from "../lib/db/queries/users";
 import { Feed, User } from "../lib/db/schema.js"
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
+export async function handlerAddFeed(cmdName: string, user: User, ...args: string[]) {
     if (args.length !== 2) {
         throw new Error(`usage: ${cmdName} <feed_name> <url>`);
     }
@@ -12,23 +10,13 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
     const name = args[0];
     const url = args[1];
 
-    const config = readConfig();
-    const currentUser = config.currentUserName;
-    if (!currentUser) {
-        throw new Error("Failed to get current user.");
-    }
-    const currentUserObject = await getUserByName(currentUser);
-    if (!currentUserObject) {
-        throw new Error("Failed to get current user id.");
-    }
-
-    const createdFeedResult = await createFeed(name, url, currentUserObject.id)
-    const followedResult = await createFeedFollow(currentUserObject.id, createdFeedResult.id)
+    const createdFeedResult = await createFeed(name, url, user.id)
+    const followedResult = await createFeedFollow(user.id, createdFeedResult.id)
     console.log(`Feed followed:`);
     console.log(`* Feed:  ${followedResult.feedName}`);
     console.log(`* User:  ${followedResult.userName}`);
     console.log(`* Detailed feed information below: `);
-    printFeed(createdFeedResult, currentUserObject)
+    printFeed(createdFeedResult, user)
 }
 
 export async function handlerGetFeeds(cmdName: string) {

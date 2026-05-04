@@ -1,5 +1,5 @@
-
 import { CommandsRegistry, registerCommand,runCommand } from "./commands/commands.js";
+import { middlewareLoggedIn } from "./middleware.js";
 import { handlerLogin, handlerRegister, handlerReset, handlerGetUsers } from "./commands/users.js";
 import { handlerAgg } from "./commands/aggregate.js";
 import { handlerAddFeed, handlerGetFeeds } from "./commands/feeds.js";
@@ -17,15 +17,15 @@ async function main() {
   const cmdArgs = args.slice(1);
   const commandsRegistry: CommandsRegistry = {};
 
-  registerCommand(commandsRegistry, "login", handlerLogin);
-  registerCommand(commandsRegistry, "register", handlerRegister);
-  registerCommand(commandsRegistry, "reset", handlerReset);
-  registerCommand(commandsRegistry, "users", handlerGetUsers);
-  registerCommand(commandsRegistry, "agg", handlerAgg);
-  registerCommand(commandsRegistry, "addfeed", handlerAddFeed);
-  registerCommand(commandsRegistry, "feeds", handlerGetFeeds);
-  registerCommand(commandsRegistry, "follow", handlerFeedFollows);
-  registerCommand(commandsRegistry, "following", handlerFollowing);
+  registerCommand(commandsRegistry, "login", handlerLogin); 
+  registerCommand(commandsRegistry, "register", handlerRegister); 
+  registerCommand(commandsRegistry, "reset", handlerReset); 
+  registerCommand(commandsRegistry, "users", handlerGetUsers); 
+  registerCommand(commandsRegistry, "agg", handlerAgg); 
+  registerCommand(commandsRegistry, "addfeed", middlewareLoggedIn(handlerAddFeed));
+  registerCommand(commandsRegistry, "feeds", handlerGetFeeds)
+  registerCommand(commandsRegistry, "follow", middlewareLoggedIn(handlerFeedFollows));
+  registerCommand(commandsRegistry, "following", middlewareLoggedIn(handlerFollowing));
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);
