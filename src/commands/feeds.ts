@@ -1,5 +1,6 @@
 import { readConfig } from "../config.js";
 import { createFeed, getFeeds } from "../lib/db/queries/feeds";
+import { createFeedFollow } from "../lib/db/queries/feed-follows.js";
 import { getUserByName } from "../lib/db/queries/users";
 import { Feed, User } from "../lib/db/schema.js"
 
@@ -20,7 +21,13 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
     if (!currentUserObject) {
         throw new Error("Failed to get current user id.");
     }
+
     const createdFeedResult = await createFeed(name, url, currentUserObject.id)
+    const followedResult = await createFeedFollow(currentUserObject.id, createdFeedResult.id)
+    console.log(`Feed followed:`);
+    console.log(`* Feed:  ${followedResult.feedName}`);
+    console.log(`* User:  ${followedResult.userName}`);
+    console.log(`* Detailed feed information below: `);
     printFeed(createdFeedResult, currentUserObject)
 }
 

@@ -13,3 +13,8 @@ export async function getFeeds() {
     return `-------------------\n* ${object.feeds.name}\n* ${object.feeds.url}\n* ${object.users.name}\n-------------------`;
   })
 }
+
+export async function getFeedsByURL(url: string) {
+  const [result] = await db.select().from(feeds).where(eq(feeds.url, url));
+  return result
+}
